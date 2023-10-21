@@ -8,8 +8,10 @@ target/*
 /.project
 /.settings
 /RUNNING_PID
-project
-project/*
+project/.bloop
+project/target
+project/project/.bloop
+project/project/target
 .g8
 .bloop
 .metals
