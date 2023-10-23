@@ -28,7 +28,7 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def game() = Action { implicit request: Request[AnyContent] =>
-    Ok(tui.grid(controller.grid))
+    Ok(views.html.minesweeper(controller))
   }
 
   def undo() = Action { implicit request: Request[AnyContent] =>

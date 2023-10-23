@@ -1,0 +1,30 @@
+@(controller: de.htwg.se.minesweeper.controller.Controller)
+
+@getCellContent(cell: de.htwg.se.minesweeper.model.cell.ICell): String= @{
+    if (cell.isFlagged) {
+        return "⚑"
+    }
+    if (cell.isHidden) {
+        return "?"
+    }
+    if (cell.isMine)
+        return "#"
+    return if (cell.getValue > 0) then cell.getValue.toString() else " "
+}
+
+@main("Minesweeper") {
+    <h1>Minesweeper</h1>
+
+    <table border="1">
+
+        @for(row <- 0 until controller.getGrid.getHeight){
+            <tr>
+                @for(column <- 0 until controller.getGrid.getWidth){
+                    <td>&ensp;@getCellContent(controller.getGrid.getCell(row, column))&ensp;</td>
+                }
+            </tr>
+        }
+
+    </table>
+}
+  
