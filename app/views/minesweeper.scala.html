@@ -1,30 +1,51 @@
 @(controller: de.htwg.se.minesweeper.controller.Controller)
+@import play.api.mvc.Session
 
 @getCellContent(cell: de.htwg.se.minesweeper.model.cell.ICell): String= @{
     if (cell.isFlagged) {
-        return "⚑"
+        return "🚩"
     }
     if (cell.isHidden) {
         return "?"
     }
     if (cell.isMine)
-        return "#"
+        return "💣"
     return if (cell.getValue > 0) then cell.getValue.toString() else " "
+}
+
+@getCellClass(cell: de.htwg.se.minesweeper.model.cell.ICell): String= @{
+    if (cell.isFlagged) {
+        return "flagged"
+    }
+    if(cell.isMine && !cell.isHidden)
+        return "cell-opened cell-mine"
+    if(cell.isHidden)
+        return ""
+    
+    "cell-opened " + (if (cell.getValue > 0) then ("cell-value-"+cell.getValue.toString()) else " ")
 }
 
 @main("Minesweeper") {
     <h1>Minesweeper</h1>
-
-    <table border="1">
-
-        @for(row <- 0 until controller.getGrid.getHeight){
-            <tr>
-                @for(column <- 0 until controller.getGrid.getWidth){
-                    <td>&ensp;@getCellContent(controller.getGrid.getCell(row, column))&ensp;</td>
-                }
-            </tr>
-        }
-
-    </table>
+    <div id="game-container">
+        <div id="game-board">
+            @for(row <- 0 until controller.getGrid.getHeight){
+                <div class="game-row">
+                    @for(column <- 0 until controller.getGrid.getWidth){
+                        <a href="@routes.HomeController.place(row, column)">
+                            <div class="cell @getCellClass(controller.getGrid.getCell(row, column))">&ensp;@getCellContent(controller.getGrid.getCell(row, column))&ensp;</div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="buttons">
+        <form action="@routes.HomeController.undo()">
+            <input class="form-button" type="submit" value="undo" />
+        </form>
+        <form action="@routes.HomeController.redo()">
+            <input class="form-button" type="submit" value="redo" />
+        </form>
+    </div>
 }
-  
