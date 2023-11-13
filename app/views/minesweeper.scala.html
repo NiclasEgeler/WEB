@@ -3,13 +3,13 @@
 
 @getCellContent(cell: de.htwg.se.minesweeper.model.cell.ICell): String= @{
     if (cell.isFlagged) {
-        return "🚩"
+        return "F"
     }
     if (cell.isHidden) {
         return "?"
     }
     if (cell.isMine)
-        return "💣"
+        return "#"
     return if (cell.getValue > 0) then cell.getValue.toString() else " "
 }
 
@@ -23,6 +23,10 @@
         return ""
     
     "cell-opened " + (if (cell.getValue > 0) then ("cell-value-"+cell.getValue.toString()) else " ")
+}
+
+@showGameOver(cell: de.htwg.se.minesweeper.model.cell.ICell): Boolean= @{
+    cell.isMine && !cell.isHidden
 }
 
 @main("Minesweeper") {
@@ -42,10 +46,21 @@
     </div>
     <div class="buttons">
         <form action="@routes.HomeController.undo()">
-            <input class="form-button" type="submit" value="undo" />
+            <button type="submit" class="btn btn-primary">Undo</button>
         </form>
         <form action="@routes.HomeController.redo()">
-            <input class="form-button" type="submit" value="redo" />
+            <button type="submit" class="btn btn-primary">Redo</button>
         </form>
     </div>
+
+    @for(row <- 0 until controller.getGrid.getHeight; column <- 0 until controller.getGrid.getWidth){
+        @if(showGameOver(controller.getGrid.getCell(row, column))) {
+            <div class="alert alert-danger alert-dismissible fade show mt-3 text-center" role="alert">
+                You just hit a mine and the game is over. If you want to continue, you can press the undo button.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+    }
 }

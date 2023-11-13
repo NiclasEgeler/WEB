@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 import play.api._
+import play.filters.csrf.CSRF
 import play.api.mvc._
 import de.htwg.se.minesweeper.controller._
 import de.htwg.se.minesweeper.controller.modules.DefaultModule.{given}
