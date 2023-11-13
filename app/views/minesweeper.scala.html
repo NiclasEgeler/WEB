@@ -3,19 +3,19 @@
 
 @getCellContent(cell: de.htwg.se.minesweeper.model.cell.ICell): String= @{
     if (cell.isFlagged) {
-        return "F"
+        return "🏴"
     }
     if (cell.isHidden) {
         return "?"
     }
     if (cell.isMine)
-        return "#"
+        return "💣"
     return if (cell.getValue > 0) then cell.getValue.toString() else " "
 }
 
 @getCellClass(cell: de.htwg.se.minesweeper.model.cell.ICell): String= @{
     if (cell.isFlagged) {
-        return "flagged"
+        return "cell-flagged"
     }
     if(cell.isMine && !cell.isHidden)
         return "cell-opened cell-mine"
@@ -35,10 +35,14 @@
         <div id="game-board">
             @for(row <- 0 until controller.getGrid.getHeight){
                 <div class="game-row">
-                    @for(column <- 0 until controller.getGrid.getWidth){
-                        <a href="@routes.HomeController.place(row, column)">
-                            <div class="cell @getCellClass(controller.getGrid.getCell(row, column))">&ensp;@getCellContent(controller.getGrid.getCell(row, column))&ensp;</div>
-                        </a>
+                    @for(column <- 0 until controller.getGrid.getWidth){            
+                        <div 
+                            data-x="@row" data-y="@column"
+                            class="cell @getCellClass(controller.getGrid.getCell(row, column))"
+                        >
+                            <span>@getCellContent(controller.getGrid.getCell(row, column))</span>
+                        </div>
+            
                     }
                 </div>
             }
@@ -53,6 +57,34 @@
         </form>
     </div>
 
+    <button type="button" class="btn btn-secondary help-button" data-toggle="modal" data-target="#helpModal">
+        Help
+    </button>
+
+    <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">Game Instructions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <li href="#" class="list-group-item list-group-item-action">Left click to open a cell</li>
+                        <li href="#" class="list-group-item list-group-item-action">Right click to flag a cell</li>
+                        <li href="#" class="list-group-item list-group-item-action">If you open a cell that contains a mine the game is over</li>
+                        <li href="#" class="list-group-item list-group-item-action">You win the game if you open all cells that do not contain a mine</li>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @for(row <- 0 until controller.getGrid.getHeight; column <- 0 until controller.getGrid.getWidth){
         @if(showGameOver(controller.getGrid.getCell(row, column))) {
             <div class="alert alert-danger alert-dismissible fade show mt-3 text-center" role="alert">
@@ -63,4 +95,6 @@
             </div>
         }
     }
+
+    <script type="text/javascript" src='@routes.Assets.versioned("javascripts/minesweeper.js")' type="module"></script>
 }
