@@ -7,10 +7,27 @@ import play.api.mvc._
 import de.htwg.se.minesweeper.controller._
 import de.htwg.se.minesweeper.controller.modules.DefaultModule.{given}
 import de.htwg.se.minesweeper.views.tui.Tui
+import play.api.libs.json._
+import de.htwg.se.minesweeper.model.cell._
+import de.htwg.se.minesweeper.model.grid._
 
-/** This controller creates an `Action` to handle HTTP requests to the
-  * application's home page.
-  */
+implicit val cellWrites: Writes[ICell] = new Writes [ICell] {
+  def writes(cell: ICell) = Json.obj(
+    "value" -> cell.getValue,
+    "isFlagged" -> cell.isFlagged,
+    "isHidden" -> cell.isHidden,
+    "isMine" -> cell.isMine,    
+  )
+}
+
+implicit val gridWrites: Writes[IGrid] = new Writes [IGrid] {
+  def writes(grid: IGrid) = Json.obj(
+    "columns" -> grid.getWidth,
+    "rows" -> grid.getHeight,
+    "cells" -> (for (i <- 0 until grid.getHeight) yield grid.getRow(i))
+  )
+} 
+
 @Singleton
 class HomeController @Inject() (val controllerComponents: ControllerComponents)
     extends BaseController {
@@ -18,40 +35,39 @@ class HomeController @Inject() (val controllerComponents: ControllerComponents)
   var tui = new Tui()
   var controller = new Controller()
 
-  /** Create an Action to render an HTML page.
-    *
-    * The configuration in the `routes` file means that this method will be
-    * called when the application receives a `GET` request with a path of `/`.
-    */
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
 
   def game() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.minesweeper(controller))
+    Ok(views.html.minesweeper())
+  }
+
+  def grid() = Action { implicit request: Request[AnyContent] =>
+    Ok(Json.toJson(controller.grid))
   }
 
   def undo() = Action { implicit request: Request[AnyContent] =>
     controller.undo()
-    Ok(views.html.minesweeper(controller))
+    Ok(Json.toJson(controller.grid))
   }
 
   def redo() = Action { implicit request: Request[AnyContent] =>
     controller.redo()
-    Ok(views.html.minesweeper(controller))
+    Ok(Json.toJson(controller.grid))
   }
 
   def flag(x: Int, y: Int) = Action { implicit request: Request[AnyContent] =>
     controller.flagCell(x, y) match {
-      case None       => Ok(views.html.minesweeper(controller))
-      case Some(grid) => Ok(views.html.minesweeper(controller))
-    }
+      case None       => Ok(Json.toJson(controller.grid) )
+      case Some(grid) => Ok(Json.toJson(grid))
+    } 
   }
 
   def place(x: Int, y: Int) = Action { implicit request: Request[AnyContent] =>
     controller.openCell(x, y) match {
-      case None       => Ok(views.html.minesweeper(controller))
-      case Some(grid) => Ok(views.html.minesweeper(controller))
+      case None       => Ok(Json.toJson(controller.grid))
+      case Some(grid) => Ok(Json.toJson(grid))
     } 
   }
 
