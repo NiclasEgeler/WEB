@@ -95,6 +95,23 @@
             </div>
         }
     }
-
+    <div class="modal fade" id="gameOverModal" tabindex="-1" role="dialog" aria-labelledby="gameOverModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="gameOverModalLabel">Game Over</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              You hit a mine! Game Over. To play again undo your last move.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="playAgainButton">Undo</button>
+            </div>
+          </div>
+        </div>
+    </div>
     <script type="text/javascript" src='@routes.Assets.versioned("javascripts/minesweeper.js")' type="module"></script>
 }
