@@ -105,7 +105,7 @@ function loadGrid(gridData) {
   });
 }
 
-$(document).ready(function () {
+$(document).ready(function () {  
   $.ajax({
     url: "/api/grid",
     type: "GET",
@@ -116,7 +116,7 @@ $(document).ready(function () {
     error: (error) => {
       console.log(error);
     },
-  });
+  });  
 
   $("#undoButton").click(function () {
     $.get("/api/undo", function (data) {

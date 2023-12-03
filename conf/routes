@@ -6,6 +6,7 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index()
 GET     /game                       controllers.HomeController.game()
+GET     /multiplayer                controllers.HomeController.multiplayer()
 
 
 # API Routes
@@ -14,6 +15,17 @@ GET     /api/place/:x/:y            controllers.HomeController.place(x:Int, y:In
 GET     /api/flag/:x/:y             controllers.HomeController.flag(x:Int, y:Int)
 GET     /api/undo                   controllers.HomeController.undo()
 GET     /api/redo                   controllers.HomeController.redo()
+
+# API Multiplayer Routes
+GET     /api/multiplayer/grid/:id                   controllers.HomeController.gridMultiplayer(id: String)
+GET     /api/multiplayer/opponent/:id               controllers.HomeController.opponentGrid(id: String)
+GET     /api/multiplayer/place/:id/:x/:y            controllers.HomeController.placeMultiplayer(id: String, x:Int, y:Int)
+GET     /api/multiplayer/flag/:id/:x/:y             controllers.HomeController.flagMultiplayer(id: String, x:Int, y:Int)
+
+
+# WEB Socket
+
+GET /websocket/:id                  controllers.HomeController.socket(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

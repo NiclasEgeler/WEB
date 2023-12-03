@@ -1,0 +1,59 @@
+@main("Minesweeper") {
+<h1>Minesweeper</h1>
+<div id="game-container">
+    <div class="game-field">
+        <h2> Your Board</h2>
+        <div id="game-board">
+        </div>
+    </div>
+    <div class="game-field">
+        <h2> Opponent's Board</h2>
+        <div id="game-board-opponent">
+    </div>
+    </div>
+</div>
+<!-- <div class="buttons">
+    <button id="undoButton" type="submit" class="btn btn-primary">Undo</button>
+    <button id="redoButton" type="submit" class="btn btn-primary">Redo</button>
+</div> -->
+
+<button type="button" class="btn btn-secondary help-button" data-toggle="modal" data-target="#helpModal">
+    Help
+</button>
+
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpModalLabel">Game Instructions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <li href="#" class="list-group-item list-group-item-action">
+                        Left click to open a cell
+                    </li>
+                    <li href="#" class="list-group-item list-group-item-action">
+                        Right click to flag a cell
+                    </li>
+                    <li href="#" class="list-group-item list-group-item-action">
+                        If you open a cell that contains a mine the game is over
+                    </li>
+                    <li href="#" class="list-group-item list-group-item-action">
+                        You win the game if you open all cells that do not contain a mine
+                    </li>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src='@routes.Assets.versioned("javascripts/multiplayer.js")' type="module"></script>
+}
