@@ -2,6 +2,7 @@
 import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import ViteFonts from 'unplugin-fonts/vite'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -28,6 +29,54 @@ export default defineConfig({
         }],
       },
     }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}'],        
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/api/grid"),
+            handler: 'NetworkFirst',
+            options: {              
+              cacheName: 'api',
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          // Weird Fix to handle offline mode because assets not in woker precache
+          {
+            urlPattern: ({ url }) => {
+                return url.pathname.startsWith('/')
+            },
+            handler: 'NetworkFirst',
+            options: {
+                cacheName: 'build-cache',
+                cacheableResponse: {
+                    statuses: [0, 200]
+                }
+            }
+        }
+        ]
+      },
+      devOptions: {
+        enabled: true
+      },
+      manifest: {
+        name: 'Minesweeper',
+        short_name: 'Minesweeper',
+        display: 'standalone',
+        icons: [
+          {
+            src: 'icon.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',          
+          }
+        ]
+      }
+    })
   ],
   define: { 'process.env': {} },
   resolve: {
